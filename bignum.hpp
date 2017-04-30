@@ -243,14 +243,3 @@ bignum operator-(const bignum& a,const bignum& b){
 	bignum c=-b;
 	return a+c;
 }
-int main()
-{
-	bignum a=7987.768;
-	bignum b=a;
-	bignum c=a;
-	a.print();
-	b.print();
-	c=(a-b);
-	c.print();
-	return 0;
-}
