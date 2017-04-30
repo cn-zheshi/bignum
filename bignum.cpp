@@ -28,6 +28,7 @@ int p(char a)
 }
 class bignum {
 	friend bignum operator+(const bignum&,const bignum&);
+	friend bignum operator-(const bignum& a);
 	std::deque<int> de1;
 	std::deque<int> de2;
 	bool sign=true;
@@ -73,12 +74,22 @@ public:
 	{
 		if(!(this->sign))
 			std::cout<<"-";
+		std::deque<int> a=(this->de2);
+		int count=0;
+		while(count==0&&!a.empty()){
+			count=1;
+			if(a[a.size()-1]==0){
+				a.pop_back();
+				--count;
+			}
+		}
 		int i=(this->de1).size()-1;
 		for(; i>=0; --i)
 			std::cout<<(this->de1)[i];
-		std::cout<<(this->point);
-		for(int v=0; v<(this->de2).size(); ++v)
-			std::cout<<(this->de2)[v];
+		if(!(this->de1).empty()&&!a.empty())
+			std::cout<<".";
+		for(int v=0; v<a.size(); ++v)
+			std::cout<<a[v];
 		std::cout<<std::endl;
 	}
 };
@@ -163,8 +174,14 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
-			if((c.de1)[(c.de1).size()-1]==0)
-				c.de1.pop_back();
+			int count=0;
+			while(count==0&&(c.de1).size()>1){
+				count=1;
+				if((c.de1)[(c.de1).size()-1]==0){
+					c.de1.pop_back();
+					--count;
+				}
+			}
 			return c;
 		}
 		else{
@@ -205,20 +222,35 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
-			if((c.de1)[(c.de1).size()-1]==0)
-				c.de1.pop_back();
+			int count=0;
+			while(count==0&&(c.de1).size()>1){
+				count=1;
+				if((c.de1)[(c.de1).size()-1]==0){
+					c.de1.pop_back();
+					--count;
+				}
+			}
 			return c;
 		}
 	}
 }
+bignum operator-(const bignum& a){
+	bignum c=a;
+	c.sign=!(a.sign);
+	return c;
+}
+bignum operator-(const bignum& a,const bignum& b){
+	bignum c=-b;
+	return a+c;
+}
 int main()
 {
 	bignum a=7987.768;
-	bignum b=-361376.56743;
+	bignum b=a;
 	bignum c=a;
 	a.print();
 	b.print();
-	c=(a+b);
+	c=(a-b);
 	c.print();
 	return 0;
 }
