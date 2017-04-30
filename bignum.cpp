@@ -162,6 +162,8 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
+			if((c.de1)[(c.de1).size()-1]==0)
+				c.de1.pop_back();
 			return c;
 		}
 		else{
@@ -202,6 +204,8 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
+			if((c.de1)[(c.de1).size()-1]==0)
+				c.de1.pop_back();
 			return c;
 		}
 	}
