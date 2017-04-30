@@ -2,6 +2,7 @@
 #include <deque>
 #include <cctype>
 #include <iostream>
+// Bignum by @cn-zheshi
 int p(char a)
 {
 	if(a=='0')
