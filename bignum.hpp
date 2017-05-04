@@ -30,6 +30,7 @@ class bignum {
 	friend bignum operator+(const bignum&,const bignum&);
 	friend bignum operator-(const bignum& a);
 	friend bignum operator*(const bignum& a,const bignum& b);
+	friend bignum operator/(const bignum& a,const bignum& b);
 	std::deque<int> de1;
 	std::deque<int> de2;
 	bool sign=true;
@@ -61,6 +62,14 @@ public:
 						if(count>1)
 							de2.push_back(p(str[i]));
 				}
+			}
+		}
+		count=0;
+		while(count==0&&!de2.empty()){
+			count=1;
+			if(de2[de2.size()-1]==0){
+				de2.pop_back();
+				--count;
 			}
 		}
 	}/*
@@ -98,29 +107,23 @@ public:
 	{
 		if(!(this->sign))
 			std::cout<<"-";
-		std::deque<int> a=(this->de2);
-		int count=0;
-		while(count==0&&!a.empty()){
-			count=1;
-			if(a[a.size()-1]==0){
-				a.pop_back();
-				--count;
-			}
-		}
 		for(std::size_t i=(this->de1).size()-1; i>=0; --i){
 			std::cout<<(this->de1)[i];
 			if(i==0)
 				break;
 		}
-		if(!(this->de1).empty()&&!a.empty())
+		if(!(this->de1).empty()&&!(this->de2).empty())
 			std::cout<<".";
-		for(std::size_t v=0; v<a.size(); ++v)
-			std::cout<<a[v];
+		if(!(this->de2).empty())
+			for(std::size_t v=0; v<(this->de2).size(); ++v)
+				std::cout<<(this->de2)[v];
 		std::cout<<std::endl;
 	}
 };
 bignum operator+(const bignum& a,const bignum& b)
-{
+{	
+	if(a.de1.empty()||b.de1.empty())
+		std::cerr<<"Error";
 	bignum c;
 	if(((a.sign)&&(b.sign))||(!(a.sign)&&!(b.sign))) {
 		if(!(a.sign)&&!(b.sign))
@@ -229,6 +232,14 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
+			count=0;
+			while(count==0&&!c.de2.empty()){
+				count=1;
+				if((c.de2)[c.de2.size()-1]==0){
+					c.de2.pop_back();
+					--count;
+				}
+			}
 			return c;
 		}
 		else{
@@ -298,20 +309,34 @@ bignum operator+(const bignum& a,const bignum& b)
 					--(c.de1)[i+1];
 				}
 			}
+			count=0;
+			while(count==0&&!c.de2.empty()){
+				count=1;
+				if((c.de2)[c.de2.size()-1]==0){
+					c.de2.pop_back();
+					--count;
+				}
+			}
 			return c;
 		}
 	}
 }
 bignum operator-(const bignum& a){
+	if(a.de1.empty())
+		std::cerr<<"Error";
 	bignum c=a;
 	c.sign=!(a.sign);
 	return c;
 }
 bignum operator-(const bignum& a,const bignum& b){
+	if(a.de1.empty()||b.de1.empty())
+		std::cerr<<"Error";
 	bignum c=-b;
 	return a+c;
 }
 bignum operator*(const bignum& a,const bignum& b){
+	if(a.de1.empty()||b.de1.empty())
+		std::cerr<<"Error";
 	bignum c;
 	std::deque<int> x(a.de1.size()+b.de1.size(),0);
 	c.de1=x;
@@ -353,6 +378,14 @@ bignum operator*(const bignum& a,const bignum& b){
 			--count;
 		}
 	}
+	count=0;
+	while(count==0&&!c.de2.empty()){
+		count=1;
+		if((c.de2)[c.de2.size()-1]==0){
+			c.de2.pop_back();
+			--count;
+		}
+	}
 	count=1;
 	while(count!=0){
 		count=0;
@@ -382,8 +415,8 @@ bignum operator*(const bignum& a,const bignum& b){
 		}
 	}
 	return c;
-}/*
-bignum operator""x(const char* p)
+}
+/*bignum operator""x(const char* p)
 {
 	return bignum(p);
 }*/
