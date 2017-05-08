@@ -337,6 +337,8 @@ bignum operator-(const bignum& a,const bignum& b){
 bignum operator*(const bignum& a,const bignum& b){
 	if(a.de1.empty()||b.de1.empty())
 		std::cerr<<"Error";
+	if((a.de1.size()==1&&a.de2.empty()&&(a.de1)[0]==0)||(b.de1.size()==1&&b.de2.empty()&&(b.de1)[0]==0))
+		return 0;
 	bignum c;
 	std::deque<int> x(a.de1.size()+b.de1.size(),0);
 	c.de1=x;
