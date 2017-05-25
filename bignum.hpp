@@ -31,6 +31,7 @@ class bignum {
 	friend bignum operator-(const bignum& a);
 	friend bignum operator*(const bignum& a,const bignum& b);
 	friend bignum operator/(const bignum& a,const bignum& b);
+	friend bignum operator-(const bignum& a,const bignum& b);
 	std::deque<int> de1;
 	std::deque<int> de2;
 	bool sign=true;
@@ -124,6 +125,10 @@ bignum operator+(const bignum& a,const bignum& b)
 {	
 	if(a.de1.empty()||b.de1.empty())
 		std::cerr<<"Error";
+	if(b.de1.size()==1&&b.de1[0]==0&&b.de2.empty())
+		return a;
+	if(a.de1.size()==1&&a.de1[0]==0&&a.de2.empty())
+		return b;
 	bignum c;
 	if(((a.sign)&&(b.sign))||(!(a.sign)&&!(b.sign))) {
 		if(!(a.sign)&&!(b.sign))
@@ -140,18 +145,43 @@ bignum operator+(const bignum& a,const bignum& b)
 				if(i>s)
 					(c.de1).push_back((b.de1)[i]);
 		}
-		for(std::size_t i=0; i<(b.de2).size(); ++i)
-			(c.de2).push_back((a.de2)[i]+(b.de2)[i]);
+		if(!(a.de2.empty()||b.de2.empty())){
+			l=(a.de2).size()<(b.de2).size()?(b.de2).size():(a.de2).size();
+			std::deque<int> ls1=a.de2;
+			std::deque<int> ls2=b.de2;
+			while(ls2.size()<l+1){
+				ls2.push_back(0);
+			}
+			while(ls1.size()<l+1){
+				ls1.push_back(0);
+			}
+			for(std::size_t i=0; i<l; ++i){
+				(c.de2).push_back((ls2)[i]+(ls1)[i]);
+			}
+		}
+		else{
+			if(a.de2.empty()&&!b.de2.empty())
+				for(std::size_t i=0; i<b.de2.size(); ++i){
+					c.de2.push_back(b.de2[i]);
+				}
+			if(b.de2.empty()&&!a.de2.empty())
+				for(std::size_t i=0; i<a.de2.size(); ++i){
+					c.de2.push_back(a.de2[i]);
+				}
+			if(b.de2.empty()&&a.de2.empty())
+				c.de2={0};
+		}
 		for(std::size_t i=(c.de2).size()-1; i>0; --i) {
 			if(i!=0&&(c.de2)[i]>=10) {
 				(c.de2)[i]-=10;
 				++(c.de2)[i-1];
 			}
-			if((c.de2)[0]>=10) {
+		}
+		if(!c.de2.empty())
+			while((c.de2)[0]>=10) {
 				(c.de2)[0]-=10;
 				++(c.de1)[0];
 			}
-		}
 		for(std::size_t i=0; i<(c.de1).size(); ++i) {
 			if((c.de1)[i]>=10&&i!=(c.de1).size()-1) {
 				(c.de1)[i]-=10;
@@ -162,10 +192,22 @@ bignum operator+(const bignum& a,const bignum& b)
 				(c.de1).push_back(1);
 			}
 		}
+		int count=0;
+		while(count==0&&!c.de2.empty()){
+			count=1;
+			if((c.de2)[c.de2.size()-1]==0){
+				c.de2.pop_back();
+				--count;
+			}
+		}
 		return c;
 	}
 	else{
 		if(a.sign){
+			if(b.de1.size()==1&&b.de1[0]==0&&b.de2.empty())
+				return a;
+			if(a.de1.size()==1&&a.de1[0]==0&&a.de2.empty())
+				return b;
 			std::size_t s=(a.de1).size()>(b.de1).size()?(b.de1).size()-1:(a.de1).size()-1;
 			std::size_t l=(a.de1).size()<(b.de1).size()?(b.de1).size()-1:(a.de1).size()-1;
 			for(std::size_t i=0; i<=l; ++i) {
@@ -186,17 +228,31 @@ bignum operator+(const bignum& a,const bignum& b)
 					--count;
 				}
 			}
-			s=(a.de2).size()>(b.de2).size()?(b.de2).size()-1:(a.de2).size()-1;
-			l=(a.de2).size()<(b.de2).size()?(b.de2).size()-1:(a.de2).size()-1;
-			for(std::size_t i=0; i<l; ++i){
-				if(i<=s)
-					(c.de2).push_back((a.de2)[i]-(b.de2)[i]);
-				if(l==a.de2.size()-1)
-					if(i>s)
-						c.de2.push_back((a.de2)[i]);
-				if(l==b.de2.size()-1)
-					if(i>s)
-						c.de2.push_back(-(b.de2)[i]);
+			if(!(a.de2.empty()||b.de2.empty())){
+				l=(a.de2).size()<(b.de2).size()?(b.de2).size():(a.de2).size();
+				std::deque<int> ls1=a.de2;
+				std::deque<int> ls2=b.de2;
+				while(ls2.size()<l+1){
+					ls2.push_back(0);
+				}
+				while(ls1.size()<l+1){
+					ls1.push_back(0);
+				}
+				for(std::size_t i=0; i<l; ++i){
+					(c.de2).push_back((ls1)[i]-(ls2)[i]);
+				}
+			}
+			else{
+				if(a.de2.empty()&&!b.de2.empty())
+					for(std::size_t i=0; i<b.de2.size(); ++i){
+						c.de2.push_back(-b.de2[i]);
+					}
+				if(b.de2.empty()&&!a.de2.empty())
+					for(std::size_t i=0; i<a.de2.size(); ++i){
+						c.de2.push_back(a.de2[i]);
+					}
+				if(b.de2.empty()&&a.de2.empty())
+					c.de2={0};
 			}
 			if((c.de1)[(c.de1).size()-1]<0){
 				c.sign=!(c.sign);
@@ -206,7 +262,7 @@ bignum operator+(const bignum& a,const bignum& b)
 					(c.de1)[i]=-(c.de1)[i];
 			}
 			if(c.de1.size()==1&&(c.de1)[0]==0){
-				for(std::size_t v=0;v<c.de2.size();++v)
+				for(std::size_t v=0;v<c.de2.size();++v){
 					if((c.de2)[v]<0){
 						c.sign=!(c.sign);
 						for(std::size_t i=0; i<(b.de2).size(); ++i)
@@ -215,16 +271,21 @@ bignum operator+(const bignum& a,const bignum& b)
 							(c.de1)[i]=-(c.de1)[i];
 						break;
 					}
+					else{
+						if((c.de2)[v]>0)
+							break;
+					}
+				}
 			}
 			for(std::size_t i=(c.de2).size()-1; i>0; --i) {
 				if(i!=0&&(c.de2)[i]<0) {
 					(c.de2)[i]+=10;
 					--(c.de2)[i-1];
 				}
-				if((c.de2)[0]<0) {
+			}
+			while((c.de2)[0]<0){
 					(c.de2)[0]+=10;
 					--(c.de1)[0];
-				}
 			}
 			for(std::size_t i=0; i<(c.de1).size(); ++i) {
 				if((c.de1)[i]<0&&i!=(c.de1).size()-1) {
@@ -243,6 +304,10 @@ bignum operator+(const bignum& a,const bignum& b)
 			return c;
 		}
 		else{
+			if(b.de1.size()==1&&b.de1[0]==0&&b.de2.empty())
+				return a;
+			if(a.de1.size()==1&&a.de1[0]==0&&a.de2.empty())
+				return b;
 			std::size_t s=(a.de1).size()>(b.de1).size()?(b.de1).size()-1:(a.de1).size()-1;
 			std::size_t l=(a.de1).size()<(b.de1).size()?(b.de1).size()-1:(a.de1).size()-1;
 			for(std::size_t i=0; i<=l; ++i) {
@@ -263,17 +328,31 @@ bignum operator+(const bignum& a,const bignum& b)
 					--count;
 				}
 			}
-			s=(a.de2).size()>(b.de2).size()?(b.de2).size()-1:(a.de2).size()-1;
-			l=(a.de2).size()<(b.de2).size()?(b.de2).size()-1:(a.de2).size()-1;
-			for(std::size_t i=0; i<l; ++i){
-				if(i<=s)
-					(c.de2).push_back((b.de2)[i]-(a.de2)[i]);
-				if(l==a.de2.size()-1)
-					if(i>s)
-						c.de2.push_back(-(a.de2)[i]);
-				if(l==b.de2.size()-1)
-					if(i>s)
-						c.de2.push_back((b.de2)[i]);
+			if(!(a.de2.empty()||b.de2.empty())){
+				l=(a.de2).size()<(b.de2).size()?(b.de2).size():(a.de2).size();
+				std::deque<int> ls1=a.de2;
+				std::deque<int> ls2=b.de2;
+				while(ls2.size()<l+1){
+					ls2.push_back(0);
+				}
+				while(ls1.size()<l+1){
+					ls1.push_back(0);
+				}
+				for(std::size_t i=0; i<l; ++i){
+					(c.de2).push_back((ls2)[i]-(ls1)[i]);
+				}
+			}
+			else{
+				if(a.de2.empty()&&!b.de2.empty())
+					for(std::size_t i=0; i<b.de2.size(); ++i){
+						c.de2.push_back(b.de2[i]);
+					}
+				if(b.de2.empty()&&!a.de2.empty())
+					for(std::size_t i=0; i<a.de2.size(); ++i){
+						c.de2.push_back(-a.de2[i]);
+					}
+				if(b.de2.empty()&&a.de2.empty())
+					c.de2={0};
 			}
 			if((c.de1)[(c.de1).size()-1]<0){
 				c.sign=!(c.sign);
@@ -283,7 +362,7 @@ bignum operator+(const bignum& a,const bignum& b)
 					(c.de1)[i]=-(c.de1)[i];
 			}
 			if(c.de1.size()==1&&(c.de1)[0]==0){
-				for(std::size_t v=0;v<c.de2.size();++v)
+				for(std::size_t v=0;v<c.de2.size();++v){
 					if((c.de2)[v]<0){
 						c.sign=!(c.sign);
 						for(std::size_t i=0; i<(b.de2).size(); ++i)
@@ -292,16 +371,21 @@ bignum operator+(const bignum& a,const bignum& b)
 							(c.de1)[i]=-(c.de1)[i];
 						break;
 					}
+					else{
+						if((c.de2)[v]>0)
+							break;
+					}
+				}
 			}
 			for(std::size_t i=(c.de2).size()-1; i>0; --i) {
 				if(i!=0&&(c.de2)[i]<0) {
 					(c.de2)[i]+=10;
 					--(c.de2)[i-1];
 				}
-				if((c.de2)[0]<0) {
+			}
+			while((c.de2)[0]<0){
 					(c.de2)[0]+=10;
 					--(c.de1)[0];
-				}
 			}
 			for(std::size_t i=0; i<(c.de1).size(); ++i) {
 				if((c.de1)[i]<0&&i!=(c.de1).size()-1) {
@@ -397,11 +481,11 @@ bignum operator*(const bignum& a,const bignum& b){
 				++(c.de2)[i-1];
 				++count;
 			}
-			if((c.de2)[0]>=10) {
-				(c.de2)[0]-=10;
-				++(c.de1)[0];
-				++count;
-			}
+		}
+		if((c.de2)[0]>=10) {
+			(c.de2)[0]-=10;
+			++(c.de1)[0];
+			++count;
 		}
 		for(std::size_t i=0; i<(c.de1).size(); ++i) {
 			if((c.de1)[i]>=10&&i!=(c.de1).size()-1) {
@@ -422,3 +506,34 @@ bignum operator*(const bignum& a,const bignum& b){
 {
 	return bignum(p);
 }*/
+bignum operator/(const bignum& a,const bignum& b){
+	if(a.de1.empty()||b.de1.empty())
+		std::cerr<<"Error";
+	bignum c=0;
+	bignum e;
+	bignum f;
+	double d=1;
+	if(a.sign)
+		e=a;
+	else
+		e=-a;
+	if(b.sign)
+		f=b;
+	else
+		f=-b;
+	if(b.de1.size()==1&&b.de1[0]==0&&b.de2.empty())
+		std::cerr<<"Error";
+	while(!(e-(f*d)).sign)
+		d=0.1*d;
+	while(((e-(f*d)).sign)){
+		e=e-(f*d);
+		c=c+d;
+		if((e-(f*d)).de1.size()==1&&(e-(f*d)).de1[0]==0&&(e-(f*d)).de2.empty()){
+			c=c+d;
+			break;
+		}
+		if((!(e-(f*d)).sign)&&d>0.0001)
+			d=0.1*d;
+	}
+	return c;
+}
