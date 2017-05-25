@@ -49,19 +49,21 @@ public:
 				for(std::size_t i=1; i<str.size(); ++i) {
 					if(!std::ispunct(str[i])&&count==0) {
 						de1.push_front(p(str[i]));
-					} else
+					} else {
 						++count;
 						if(count>1)
 							de2.push_back(p(str[i]));
+					}
 				}
 			} else {
 				for(std::size_t i=0; i<str.size(); ++i) {
 					if(!std::ispunct(str[i])&&count==0) {
 						de1.push_front(p(str[i]));
-					} else
+					} else {
 						++count;
 						if(count>1)
 							de2.push_back(p(str[i]));
+					}
 				}
 			}
 		}
@@ -424,10 +426,30 @@ bignum operator*(const bignum& a,const bignum& b){
 	if((a.de1.size()==1&&a.de2.empty()&&(a.de1)[0]==0)||(b.de1.size()==1&&b.de2.empty()&&(b.de1)[0]==0))
 		return 0;
 	bignum c;
+	if(a.de2.empty()&&b.de2.empty()){
+		bignum d;
+		bignum e;
+		c=0;
+		if(a.sign)
+			d=a;
+		else
+			d=-a;
+		if(b.sign)
+			e=b;
+		else
+			e=-b;
+		while(e.sign&&!(e.de1.size()==1&&e.de1[0]==0)){
+			c=c+d;
+			e=e-1;
+		}
+		if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
+			c.sign=!c.sign;
+		return c;
+	}
 	std::deque<int> x(a.de1.size()+b.de1.size(),0);
 	c.de1=x;
-	std::deque<int> y(a.de2.size()+b.de2.size(),0);
-	c.de2=y;
+		std::deque<int> y(a.de2.size()+b.de2.size(),0);
+		c.de2=y;
 	if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
 		c.sign=false;
 	for(std::size_t i=0;i<a.de1.size();++i){
@@ -482,11 +504,12 @@ bignum operator*(const bignum& a,const bignum& b){
 				++count;
 			}
 		}
-		if((c.de2)[0]>=10) {
-			(c.de2)[0]-=10;
-			++(c.de1)[0];
-			++count;
-		}
+		if(!c.de2.empty())
+			if((c.de2)[0]>=10) {
+				(c.de2)[0]-=10;
+				++(c.de1)[0];
+				++count;
+			}
 		for(std::size_t i=0; i<(c.de1).size(); ++i) {
 			if((c.de1)[i]>=10&&i!=(c.de1).size()-1) {
 				(c.de1)[i]-=10;
