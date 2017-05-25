@@ -555,7 +555,7 @@ bignum operator/(const bignum& a,const bignum& b){
 			c=c+d;
 			break;
 		}
-		if((!(e-(f*d)).sign)&&d>0.0001)
+		if((!(e-(f*d)).sign)&&d>0.0000001)
 			d=0.1*d;
 	}
 	if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
