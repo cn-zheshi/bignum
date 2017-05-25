@@ -535,5 +535,7 @@ bignum operator/(const bignum& a,const bignum& b){
 		if((!(e-(f*d)).sign)&&d>0.0001)
 			d=0.1*d;
 	}
+	if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
+		c.sign=!c.sign;
 	return c;
 }
