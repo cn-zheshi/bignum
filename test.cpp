@@ -1,5 +1,6 @@
 #include "bignum.hpp"
-int main(){
+int main()
+{
 	bignum a=28;
 	bignum b=-24;
 	(a-b).print();
