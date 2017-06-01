@@ -517,7 +517,7 @@ namespace zheshi {
 		bignum c=0;
 		bignum e;
 		bignum f;
-		double d=1;
+		bignum d=1;
 		if(a.sign)
 			e=a;
 		else
@@ -537,7 +537,7 @@ namespace zheshi {
 				c=c+d;
 				break;
 			}
-			if((!(e-(f*d)).sign)&&d>0.0000001)
+			if((!(e-(f*d)).sign)&&d.de2.size()<8)
 				d=0.1*d;
 		}
 		if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
