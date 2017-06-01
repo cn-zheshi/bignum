@@ -15,6 +15,12 @@ namespace zheshi {
 		friend bignum operator*(const bignum&,const bignum&);
 		friend bignum operator/(const bignum&,const bignum&);
 		friend bignum operator-(const bignum&,const bignum&);
+		friend bool operator==(const bignum& a,const bignum& b);
+		friend bool operator>=(const bignum& a,const bignum& b);
+		friend bool operator<(const bignum& a,const bignum& b);
+		friend bool operator>(const bignum& a,const bignum& b);
+		friend bool operator<=(const bignum& a,const bignum& b);
+		friend bool operator!=(const bignum& a,const bignum& b);
 		std::deque<int> de1;
 		std::deque<int> de2;
 		bool sign=true;
@@ -543,6 +549,42 @@ namespace zheshi {
 		if(!((a.sign&&b.sign)||(!a.sign&&!b.sign)))
 			c.sign=!c.sign;
 		return c;
+	}
+	bool operator==(const bignum& a,const bignum& b){
+		if(((a.sign&&b.sign)||(!a.sign&&!b.sign))&&a.de1==b.de1&&a.de2==b.de2)
+			return true;
+		else
+			return false;
+	}
+	bool operator>=(const bignum& a,const bignum& b){
+		if((a-b).sign)
+			return true;
+		else
+			return false;
+	}
+	bool operator<(const bignum& a,const bignum& b){
+		if(!(a>=b))
+			return true;
+		else
+			return false;
+	}
+	bool operator>(const bignum& a,const bignum& b){
+		if(a>=b&&(!(a==b)))
+			return true;
+		else
+			return false;
+	}
+	bool operator<=(const bignum& a,const bignum& b){
+		if((!(a>=b))||a==b)
+			return true;
+		else
+			return false;
+	}
+	bool operator!=(const bignum& a,const bignum& b){
+		if(a==b)
+			return false;
+		else
+			return true;
 	}
 }
 zheshi::bignum operator""_bignum(const char* p)
