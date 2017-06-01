@@ -25,12 +25,12 @@ namespace zheshi {
 		std::deque<int> de2;
 		bool sign=true;
 	public:
-		bignum()=default;
 		bignum(const bignum&)=default;
 		bignum(bignum&&) noexcept=default;
 		~bignum()=default;
 		explicit bignum(const std::string&);
 		bignum(long double val):bignum(std::to_string(val)) {}
+		bignum():bignum("0") {}
 		bignum& operator=(const bignum&)=default;
 	};
 	bignum::bignum(const std::string& str)
