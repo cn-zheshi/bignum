@@ -21,6 +21,8 @@ namespace zheshi {
 		friend bool operator>(const bignum& a,const bignum& b);
 		friend bool operator<=(const bignum& a,const bignum& b);
 		friend bool operator!=(const bignum& a,const bignum& b);
+		friend bignum operator%(const bignum& a,const bignum& b);
+		friend bignum operator^(const bignum& a,const bignum& b);
 		std::deque<int> de1;
 		std::deque<int> de2;
 		bool sign=true;
@@ -120,6 +122,7 @@ namespace zheshi {
 		if(a.de1.size()==1&&a.de1[0]==0&&a.de2.empty())
 			return b;
 		bignum c;
+		c.de1.clear();
 		if(((a.sign)&&(b.sign))||(!(a.sign)&&!(b.sign))) {
 			if(!(a.sign)&&!(b.sign))
 				c.sign=!(c.sign);
@@ -417,6 +420,7 @@ namespace zheshi {
 		if((a.de1.size()==1&&a.de2.empty()&&(a.de1)[0]==0)||(b.de1.size()==1&&b.de2.empty()&&(b.de1)[0]==0))
 			return 0;
 		bignum c;
+		c.de1.clear();
 		if(a.de2.empty()&&b.de2.empty()) {
 			bignum d;
 			bignum e;
@@ -585,6 +589,32 @@ namespace zheshi {
 			return false;
 		else
 			return true;
+	}
+	bignum operator%(const bignum& a,const bignum& b){
+		bignum c=a/b;
+		if(!c.de2.empty())
+			c.de2.clear();
+		c=a-(b*c);
+		return c;
+	}
+	bignum operator^(const bignum& a,const bignum& b){
+		if(a.de1.empty()||b.de1.empty())
+			throw std::logic_error("Error");
+		bignum c=b;
+		bignum d=1;
+		if(!c.de2.empty()){
+			if(c.de2[0]<5)
+				c.de2.clear();
+			else{
+				c.de2.clear();
+				++c.de1[0];
+			}
+		}
+		while(c>0){
+			d=d*a;
+			c=c-1;
+		}
+		return d;
 	}
 }
 zheshi::bignum operator""_bignum(const char* p)
