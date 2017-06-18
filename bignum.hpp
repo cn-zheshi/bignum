@@ -10,19 +10,19 @@ namespace zheshi {
 		static int p(char);
 		// Operators declaration
 		friend std::ostream& operator<<(std::ostream&,const bignum&);
-		friend bignum operator+(const bignum&,const bignum&);
-		friend bignum operator-(const bignum&);
-		friend bignum operator*(const bignum&,const bignum&);
-		friend bignum operator/(const bignum&,const bignum&);
-		friend bignum operator-(const bignum&,const bignum&);
+		friend const bignum operator+(const bignum&,const bignum&);
+		friend const bignum operator-(const bignum&);
+		friend const bignum operator*(const bignum&,const bignum&);
+		friend const bignum operator/(const bignum&,const bignum&);
+		friend const bignum operator-(const bignum&,const bignum&);
 		friend bool operator==(const bignum& a,const bignum& b);
 		friend bool operator>=(const bignum& a,const bignum& b);
 		friend bool operator<(const bignum& a,const bignum& b);
 		friend bool operator>(const bignum& a,const bignum& b);
 		friend bool operator<=(const bignum& a,const bignum& b);
 		friend bool operator!=(const bignum& a,const bignum& b);
-		friend bignum operator%(const bignum& a,const bignum& b);
-		friend bignum operator^(const bignum& a,const bignum& b);
+		friend const bignum operator%(const bignum& a,const bignum& b);
+		friend const bignum operator^(const bignum& a,const bignum& b);
 		std::deque<int> de1;
 		std::deque<int> de2;
 		bool sign=true;
@@ -113,7 +113,7 @@ namespace zheshi {
 				out<<it;
 		return out;
 	}
-	bignum operator+(const bignum& a,const bignum& b)
+	const bignum operator+(const bignum& a,const bignum& b)
 	{
 		if(a.de1.empty()||b.de1.empty())
 			throw std::logic_error("Error");
@@ -300,7 +300,7 @@ namespace zheshi {
 				return b+a;
 		}
 	}
-	bignum operator-(const bignum& a)
+	const bignum operator-(const bignum& a)
 	{
 		if(a.de1.empty())
 			throw std::logic_error("Error");
@@ -308,14 +308,14 @@ namespace zheshi {
 		c.sign=!(a.sign);
 		return c;
 	}
-	bignum operator-(const bignum& a,const bignum& b)
+	const bignum operator-(const bignum& a,const bignum& b)
 	{
 		if(a.de1.empty()||b.de1.empty())
 			throw std::logic_error("Error");
 		bignum c=-b;
 		return a+c;
 	}
-	bignum operator*(const bignum& a,const bignum& b)
+	const bignum operator*(const bignum& a,const bignum& b)
 	{
 		if(a.de1.empty()||b.de1.empty())
 			throw std::logic_error("Error");
@@ -422,7 +422,7 @@ namespace zheshi {
 		}
 		return c;
 	}
-	bignum operator/(const bignum& a,const bignum& b)
+	const bignum operator/(const bignum& a,const bignum& b)
 	{
 		if(a.de1.empty()||b.de1.empty())
 			throw std::logic_error("Error");
@@ -492,14 +492,14 @@ namespace zheshi {
 		else
 			return true;
 	}
-	bignum operator%(const bignum& a,const bignum& b){
+	const bignum operator%(const bignum& a,const bignum& b){
 		bignum c=a/b;
 		if(!c.de2.empty())
 			c.de2.clear();
 		c=a-(b*c);
 		return c;
 	}
-	bignum operator^(const bignum& a,const bignum& b){
+	const bignum operator^(const bignum& a,const bignum& b){
 		if(a.de1.empty()||b.de1.empty())
 			throw std::logic_error("Error");
 		bignum c=b;
