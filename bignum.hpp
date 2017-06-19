@@ -38,6 +38,45 @@ namespace zheshi {
 	bignum::bignum(const std::string& str)
 	{
 		int count=0;
+		int countt=0;
+		int countf=0;
+		int countp=0;
+		int countn=0;
+		for(auto &c:str){
+			if(isdigit(c)){
+				++countn;
+				continue;
+			}
+			if(c=='-'){
+				++countf;
+				if(countn!=0&&(countf!=0))
+					throw std::logic_error("Error");
+				if(countf!=0&&countt!=0)
+					throw std::logic_error("Error");
+				if(countf>1)
+					throw std::logic_error("Error");
+				continue;
+			}
+			if(c=='+'){
+				++countt;
+				if(countn!=0&&(countt!=0))
+					throw std::logic_error("Error");
+				if(countf!=0&&countt!=0)
+					throw std::logic_error("Error");
+				if(countt>1)
+					throw std::logic_error("Error");
+				continue;
+			}
+			if(c=='.'){
+				++countp;
+				if(countp>1)
+					throw std::logic_error("Error");
+				continue;
+			}
+			if(!isdigit(c)){
+				throw std::logic_error("Error");
+			}
+		}
 		if(!str.empty()) {
 			if(!std::isalnum(str[0])) {
 				if(str[0]=='-')
