@@ -42,6 +42,16 @@ namespace zheshi {
 		int countf=0;
 		int countp=0;
 		int countn=0;
+		int count1=0;
+		if(str[0]=='.'){
+			++count1;
+		}
+		if((str[0]=='+')&&str[1]=='.'){
+			+count1;
+		}
+		if((str[0]=='-')&&str[1]=='.'){
+			++count1;
+		}
 		for(auto &c:str){
 			if(isdigit(c)){
 				++countn;
@@ -91,6 +101,9 @@ namespace zheshi {
 							de2.push_back(p(str[i]));
 					}
 				}
+				if(count1!=0){
+					de1.push_front(0);
+				}
 			}
 			else {
 				for(std::size_t i=0; i<str.size(); ++i) {
@@ -102,6 +115,9 @@ namespace zheshi {
 						if(count>1)
 							de2.push_back(p(str[i]));
 					}
+				}
+				if(count1!=0){
+					de1.push_front(0);
 				}
 			}
 		}
